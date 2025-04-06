@@ -1,0 +1,37 @@
+[package]
+name = "esp32-spi-display"
+version = "0.1.0"
+authors = ["Jagoda Estera Ślązak <jslazak@jslazak.com>"]
+edition = "2021"
+resolver = "2"
+rust-version = "1.77"
+
+[[bin]]
+name = "esp32-spi-display"
+harness = false # do not use the built in cargo test harness -> resolve rust-analyzer errors
+
+[profile.release]
+opt-level = "s"
+
+[profile.dev]
+debug = false    # Symbols are nice and they don't increase the size on Flash
+opt-level = "s"
+
+[features]
+default = []
+
+experimental = ["esp-idf-svc/experimental"]
+
+[dependencies]
+esp-idf-svc = { version = "0.51", features = ["critical-section", "embassy-time-driver", "embassy-sync"] }
+esp-idf-sys = "*"
+embedded-graphics = "0.8.1"
+embedded-svc = "*"
+mipidsi = "0.9.0"
+embedded-hal = "1.0.0"
+log = "*"
+ratatui = { version = "0.29", default-features = false}
+mousefood = "*"
+
+[build-dependencies]
+embuild = "0.33"
