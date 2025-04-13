@@ -93,7 +93,7 @@
         ln -s "${ninja}/bin/ninja" $NINJA_DIR/.
 
         ln -s "${esp32ulp}/bin" $ESP32ULP_DIR/
-        ln -s "${esp-idf}" ./esp-idf2
+        ln -s "${esp-idf}" ./esp-idf
       '';
     };
   };
