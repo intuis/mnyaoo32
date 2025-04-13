@@ -139,7 +139,10 @@ impl EmbeddedApp {
         >,
         Box<dyn Error>,
     > {
-        let config = SpiConfig::new().baudrate(26.MHz().into()).data_mode(MODE_3);
+        let config = SpiConfig::new()
+            .baudrate(80.MHz().into())
+            .data_mode(MODE_3)
+            .write_only(true);
         let spi_device = SpiDeviceDriver::new_single(
             spi,
             gpio18,
