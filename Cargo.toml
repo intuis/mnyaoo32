@@ -11,11 +11,11 @@ name = "esp32-spi-display"
 harness = false
 
 [profile.release]
-opt-level = "3"
+opt-level = 3
 
 [profile.dev]
 debug = true
-opt-level = "3"
+opt-level = 3
 
 [features]
 default = []
