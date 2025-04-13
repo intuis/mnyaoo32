@@ -7,7 +7,7 @@ resolver = "2"
 rust-version = "1.81"
 
 [[bin]]
-name = "esp32-spi-display"
+name = "mnyaoo32"
 harness = false
 
 [profile.release]
