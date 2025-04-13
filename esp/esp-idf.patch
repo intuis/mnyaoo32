@@ -1,0 +1,76 @@
+diff --git a/components/esp_common/project_include.cmake b/components/esp_common/project_include.cmake
+index 2665404c50..3cdbe47786 100644
+--- a/components/esp_common/project_include.cmake
++++ b/components/esp_common/project_include.cmake
+@@ -7,7 +7,6 @@ if(NOT (${target} STREQUAL "linux" OR CMAKE_C_COMPILER_ID MATCHES "Clang"))
+         OUTPUT_VARIABLE toolchain_name
+         OUTPUT_STRIP_TRAILING_WHITESPACE
+         ERROR_QUIET)
+-    check_expected_tool_version(${toolchain_name} ${CMAKE_C_COMPILER})
+ endif()
+ 
+ if(NOT ${target} STREQUAL "linux" AND CMAKE_C_COMPILER_ID MATCHES "Clang")
+diff --git a/tools/idf.py b/tools/idf.py
+index 740713f7f4..d6a99cbee7 100755
+--- a/tools/idf.py
++++ b/tools/idf.py
+@@ -42,8 +42,6 @@ try:
+     from idf_py_actions.errors import FatalError  # noqa: E402
+     from idf_py_actions.tools import (PROG, SHELL_COMPLETE_RUN, SHELL_COMPLETE_VAR, PropertyDict,  # noqa: E402
+                                       debug_print_idf_version, get_target, merge_action_lists, print_warning)
+-    if os.getenv('IDF_COMPONENT_MANAGER') != '0':
+-        from idf_component_manager import idf_extensions
+ except ImportError as e:
+     print((f'{e}\n'
+            f'This usually means that "idf.py" was not '
+@@ -698,8 +696,6 @@ def init_cli(verbose_output: Optional[List]=None) -> Any:
+                 extensions.append((name, import_module(name)))
+ 
+     # Load component manager idf.py extensions if not explicitly disabled
+-    if os.getenv('IDF_COMPONENT_MANAGER') != '0':
+-        extensions.append(('component_manager_ext', idf_extensions))
+ 
+     # Optional load `pyclang` for additional clang-tidy related functionalities
+     try:
+diff --git a/tools/idf_tools.py b/tools/idf_tools.py
+index 0e839f8746..d6ffd0d512 100755
+--- a/tools/idf_tools.py
++++ b/tools/idf_tools.py
+@@ -1145,17 +1145,17 @@ class IDFTool(object):
+         archive_path = os.path.join(g.idf_tools_path, 'dist', archive_name)
+         assert os.path.isfile(archive_path)
+         dest_dir = self.get_path_for_version(version)
+-        if os.path.exists(dest_dir):
+-            warn('destination path already exists, removing')
+-            shutil.rmtree(dest_dir)
+-        mkdir_p(dest_dir)
+-        unpack(archive_path, dest_dir)
+-        if self._current_options.strip_container_dirs:  # type: ignore
+-            do_strip_container_dirs(dest_dir, self._current_options.strip_container_dirs)  # type: ignore
+-        if not self.check_binary_valid(version):
+-            fatal(f'Failed to check the tool while installed. Removing directory {dest_dir}')
+-            shutil.rmtree(dest_dir)
+-            raise SystemExit(1)
++        # if os.path.exists(dest_dir):
++        #     warn('destination path already exists, removing')
++        #     shutil.rmtree(dest_dir)
++        # mkdir_p(dest_dir)
++        # unpack(archive_path, dest_dir)
++        # if self._current_options.strip_container_dirs:  # type: ignore
++        #     do_strip_container_dirs(dest_dir, self._current_options.strip_container_dirs)  # type: ignore
++        # if not self.check_binary_valid(version):
++        #     fatal(f'Failed to check the tool while installed. Removing directory {dest_dir}')
++        #     shutil.rmtree(dest_dir)
++        #     raise SystemExit(1)
+ 
+     @staticmethod
+     def check_download_file(download_obj: IDFToolDownload, local_path: str) -> bool:
+@@ -2415,7 +2415,7 @@ def action_install(args):  # type: ignore
+         except ToolBinaryError:
+             pass
+         tool_spec = f'{tool_name}@{tool_version}'
+-        if tool_version in tool_obj.versions_installed:
++        if True:
+             info(f'Skipping {tool_spec} (already installed)')
+             continue
+ 

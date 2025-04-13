@@ -1,3 +1,5 @@
 /.embuild
 /target
 /Cargo.lock
+.direnv/
+/esp-idf
