@@ -20,6 +20,8 @@
       esp-tools = pkgs.callPackage ./esp/esp-tools.nix {};
       esp32ulp = pkgs.callPackage ./esp/esp32ulp-elf.nix {};
       esp-idf = pkgs.callPackage ./esp/esp-idf.nix {};
+      esp-clang = pkgs.callPackage ./esp/esp-clang-toolchain.nix {};
+      esp-rom-elfs = pkgs.callPackage ./esp/esp-rom-elfs.nix {};
       cmake = pkgs.cmake;
       ninja = pkgs.ninja;
     in pkgs.mkShell {
@@ -44,7 +46,8 @@
       ];
       packages = with pkgs; [
         (pkgs.callPackage ./esp/esp-toolchain.nix {})
-        (pkgs.callPackage ./esp/esp-clang-toolchain.nix {})
+        esp-clang
+        esp-rom-elfs
         esp32ulp
         esp-tools
         idf-rust
@@ -70,7 +73,6 @@
         export PATH="${idf-rust}/.rustup/toolchains/esp/bin:$PATH"
         export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
         export LIBCLANG_PATH="${idf-rust}/.rustup/toolchains/esp/xtensa-esp32-elf-clang/esp-18.1.2_20240912/esp-clang/lib/"
-        # export ESP_IDF_TOOLS_INSTALL_DIR=custom:${esp-tools}
 
         export TOOLS_DIR=".embuild/espressif/tools"
         mkdir -p $TOOLS_DIR
@@ -79,6 +81,8 @@
         XTENSA_DIR=$TOOLS_DIR/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf
         NINJA_DIR=$TOOLS_DIR/ninja/1.12.1
         ESP32ULP_DIR=$TOOLS_DIR/esp32ulp-elf/2.38_20240113/esp32ulp-elf
+        ESPCLANG_DIR=$TOOLS_DIR/esp-clang/esp-18.1.2_20240912/esp-clang
+        ESPROMELFS_DIR=$TOOLS_DIR/esp-rom-elfs/
 
         mkdir -p $CMAKE_DIR
         mkdir -p $XTENSA_DIR
@@ -90,10 +94,15 @@
 
         ln -s "${idf-rust}/.rustup/toolchains/esp/xtensa-esp-elf/esp-14.2.0_20240906/xtensa-esp-elf/bin" $XTENSA_DIR/
 
-        ln -s "${ninja}/bin/ninja" $NINJA_DIR/.
+        ln -s "${ninja}/bin/ninja" $NINJA_DIR/
 
         ln -s "${esp32ulp}/bin" $ESP32ULP_DIR/
+
         ln -s "${esp-idf}" ./esp-idf
+
+        ln -s "${esp-clang}/bin" $ESPCLANG_DIR/
+
+        ln -s "${esp-rom-elfs}" $ESPROMELFS_DIR/20241011
       '';
     };
   };

@@ -92,6 +92,8 @@ impl EmbeddedApp {
 
         let embedded_app = Self { event_loop, nvs };
 
+        info!("embedded app initialized");
+
         Ok((embedded_app, display))
     }
 
@@ -106,8 +108,8 @@ impl EmbeddedApp {
         )?;
 
         wifi.set_configuration(&Configuration::Client(ClientConfiguration {
-            ssid: "SSID_HERE".try_into().expect("WIFI_SSID is too long"),
-            password: "WIFI_PASS_HERE"
+            ssid: env!("WIFI_SSID").try_into().expect("WIFI_SSID is too long"),
+            password: env!("WIFI_PASS")
                 .try_into()
                 .expect("WIFI_PASSWORD is too long"),
             ..Default::default()
@@ -115,6 +117,9 @@ impl EmbeddedApp {
         wifi.start()?;
         wifi.connect()?;
         wifi.wait_netif_up()?;
+
+        info!("wifi initialized");
+
         Ok(wifi)
     }
 
@@ -154,6 +159,9 @@ impl EmbeddedApp {
         )?;
         let buffer = Box::leak(Box::new([0_u8; 512]));
         let spi_interface = SpiInterface::new(spi_device, PinDriver::output(gpio16)?, buffer);
+
+        info!("spi interface initialized");
+
         Ok(spi_interface)
     }
 }
@@ -176,7 +184,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut stream = TcpStream::connect("irc.libera.chat:6665").unwrap();
     let mut buf = vec![0; 1024];
     let mut messages_to_display: Vec<MessageToDisplay> = vec![];
+
+    info!("Stream initialized");
+
     authenticate(&mut stream);
+
+    info!("Authenticated to IRC");
 
     let mut height_available = size.height;
     loop {
