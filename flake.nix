@@ -88,6 +88,8 @@
         mkdir -p $XTENSA_DIR
         mkdir -p $NINJA_DIR
         mkdir -p $ESP32ULP_DIR
+        mkdir -p $ESPCLANG_DIR
+        mkdir -p $ESPROMELFS_DIR
 
         ln -s "${cmake}/bin" $CMAKE_DIR/
         ln -s "${cmake}/share" $CMAKE_DIR/
