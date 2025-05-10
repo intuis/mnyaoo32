@@ -27,9 +27,9 @@ use log::info;
 use mipidsi::{interface::SpiInterface, models::ST7789, Builder};
 
 use mipidsi::options::{ColorInversion, Orientation};
-use mousefood::EmbeddedBackend;
+use mousefood::{EmbeddedBackend, EmbeddedBackendConfig};
 use ratatui::prelude::Backend;
-use ratatui::style::{Color, Style, Stylize};
+use ratatui::style::{Color, Style};
 use ratatui::text::{Line, Span, Text};
 use ratatui::widgets::{Paragraph, Wrap};
 use ratatui::Terminal;
@@ -177,7 +177,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let (_embedded_app, mut display) = EmbeddedApp::init()?;
 
-    let backend = EmbeddedBackend::new(&mut display);
+    let backend = EmbeddedBackend::new(&mut display, EmbeddedBackendConfig::default());
     let size = backend.size()?;
     let mut terminal = Terminal::new(backend)?;
 
